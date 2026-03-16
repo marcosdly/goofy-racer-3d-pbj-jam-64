@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://dwr2foqo2ajwu"]
+
+[ext_resource type="PackedScene" uid="uid://el3rkpbgsxn0" path="res://scenes/car.tscn" id="1_mv8x7"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_mv8x7"]
+albedo_color = Color(0.9933364, 0, 0.29905722, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_my2y2"]
+material = SubResource("StandardMaterial3D_mv8x7")
+size = Vector3(5.82, 1, 30)
+
+[node name="Node3D" type="Node3D" unique_id=1624878648]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0018494129, -0.024374485)
+
+[node name="Car" parent="." unique_id=1956321193 instance=ExtResource("1_mv8x7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4085045, 3.7621722, 1)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1890067189]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0873785, 2.5894032, 2.9622474)
+mesh = SubResource("BoxMesh_my2y2")
