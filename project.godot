@@ -46,7 +46,7 @@ naming/script_name_casing=2
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/DebugGUI/plugin.cfg", "res://addons/GDQuest_GDScript_formatter/plugin.cfg", "res://addons/assetplus/plugin.cfg", "res://addons/input_helper/plugin.cfg", "res://addons/inspector_tabs/plugin.cfg", "res://addons/phantom_camera/plugin.cfg", "res://addons/quick_audio/plugin.cfg", "res://addons/script-ide/plugin.cfg")
+enabled=PackedStringArray("res://addons/GDQuest_GDScript_formatter/plugin.cfg", "res://addons/assetplus/plugin.cfg", "res://addons/input_helper/plugin.cfg", "res://addons/inspector_tabs/plugin.cfg", "res://addons/phantom_camera/plugin.cfg", "res://addons/quick_audio/plugin.cfg", "res://addons/script-ide/plugin.cfg")
 
 [gui]
 
