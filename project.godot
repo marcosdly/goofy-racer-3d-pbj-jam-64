@@ -1,0 +1,65 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[DebugGUI]
+
+Settings/enableGraphs=true
+Settings/enableLogs=true
+Settings/backgroundColor=Color(0, 0, 0, 0.7)
+Settings/scrubberColor=Color(1, 1, 0, 0.7)
+Settings/graphWidth=300
+Settings/graphHeight=100
+Settings/temporaryLogLifetime=5.0
+
+[application]
+
+config/name="Goofy Cargo Racer"
+config/features=PackedStringArray("4.6", "C#", "Forward Plus")
+config/icon="res://icon.svg"
+
+[autoload]
+
+Audio="*uid://bryjsbv33mil"
+InputHelper="*uid://cholww48njaeh"
+PhantomCameraManager="*uid://duq6jhf6unyis"
+DebugGUI="*uid://cyl6r68n7hl4d"
+
+[debug_draw_3d]
+
+settings/addon_root_folder="res://addons/debug_draw_3d"
+
+[dotnet]
+
+project/assembly_name="Goofy Cargo Racer"
+
+[editor]
+
+naming/scene_name_casing=3
+naming/script_name_casing=2
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/DebugGUI/plugin.cfg", "res://addons/GDQuest_GDScript_formatter/plugin.cfg", "res://addons/assetplus/plugin.cfg", "res://addons/input_helper/plugin.cfg", "res://addons/inspector_tabs/plugin.cfg", "res://addons/phantom_camera/plugin.cfg", "res://addons/quick_audio/plugin.cfg", "res://addons/script-ide/plugin.cfg")
+
+[gui]
+
+theme/default_font_multichannel_signed_distance_field=true
+
+[phantom_camera]
+
+updater/updater_mode=0
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+
+[rendering]
+
+rendering_device/driver.windows="d3d12"
