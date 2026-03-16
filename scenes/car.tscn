@@ -1,5 +1,7 @@
 [gd_scene format=3 uid="uid://el3rkpbgsxn0"]
 
+[ext_resource type="Script" uid="uid://beqcuekqr66fg" path="res://scripts/car.gd" id="1_c35m8"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b0jew"]
 albedo_color = Color(0, 0.4132431, 0.81068754, 1)
 
@@ -7,6 +9,7 @@ albedo_color = Color(0, 0.4132431, 0.81068754, 1)
 material = SubResource("StandardMaterial3D_b0jew")
 
 [node name="Car" type="Node3D" unique_id=1956321193]
+script = ExtResource("1_c35m8")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1741224518]
 mesh = SubResource("BoxMesh_c35m8")

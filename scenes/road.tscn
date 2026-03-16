@@ -13,7 +13,10 @@ size = Vector3(5.82, 1, 30)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0018494129, -0.024374485)
 
 [node name="Car" parent="." unique_id=1956321193 instance=ExtResource("1_mv8x7")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4085045, 3.7621722, 1)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.4085045, 3.803504, 1)
+
+[node name="Camera3D" type="Camera3D" parent="Car" unique_id=1189870918]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.14894605, 1.0855649, 3.696765)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1890067189]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0873785, 2.5894032, 2.9622474)
