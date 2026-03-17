@@ -73,7 +73,6 @@ LICENSE text
 # Temporary & Cache Files
 # Usually ignored via .gitignore, but defined here as binary if committed
 *.cache binary
-*.tmp binary
 *.rev binary
 *.idx binary
 *.pack binary
