@@ -85,14 +85,14 @@ func _on_ready() -> void:
 	cameraman.MOUSE_MODE_LOCKED = Input.MouseMode.MOUSE_MODE_CONFINED
 	cameraman.MOUSE_MODE_RELEASED = Input.MouseMode.MOUSE_MODE_VISIBLE
 	var game_window := get_window()
-	game_window.focus_entered.connect(_on_game_window_focus_entered)
-	game_window.focus_exited.connect(_on_game_window_focus_exited)
+	Util.try_connect(game_window.focus_entered, _on_game_window_focus_entered)
+	Util.try_connect(game_window.focus_exited, _on_game_window_focus_exited)
 
 
 func _exit_tree() -> void:
 	var game_window := get_window()
-	game_window.focus_entered.disconnect(_on_game_window_focus_entered)
-	game_window.focus_exited.disconnect(_on_game_window_focus_exited)
+	Util.try_disconnect(game_window.focus_entered, _on_game_window_focus_entered)
+	Util.try_disconnect(game_window.focus_exited, _on_game_window_focus_exited)
 
 
 ## Override method

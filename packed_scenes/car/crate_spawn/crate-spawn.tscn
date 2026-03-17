@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://d0lil5xws0d1q"]
+
+[ext_resource type="Script" uid="uid://d062i8qv7m6n" path="res://packed_scenes/car/crate_spawn/crate_spawn.gd" id="1_w22yi"]
+[ext_resource type="Script" uid="uid://b3tk50s18nphs" path="res://packed_scenes/car/crate_spawn/area_shape.gd" id="2_opp8g"]
+[ext_resource type="Shape3D" uid="uid://nc73iq27bw2p" path="res://packed_scenes/car/crate_spawn/spaw_shape.tres" id="2_qcd4x"]
+
+[sub_resource type="Curve" id="Curve_qcd4x"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(1, 1), 2.407215, 0.0, 0, 0]
+point_count = 2
+
+[node name="CrateSpawn" type="Area3D" unique_id=897202624]
+script = ExtResource("1_w22yi")
+max_crates = null
+minimum_distance = 2.0
+height_curve = SubResource("Curve_qcd4x")
+
+[node name="AreaShape" type="CollisionShape3D" parent="." unique_id=2002445204]
+shape = ExtResource("2_qcd4x")
+script = ExtResource("2_opp8g")

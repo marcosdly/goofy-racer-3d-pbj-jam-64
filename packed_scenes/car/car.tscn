@@ -1,6 +1,7 @@
 [gd_scene format=4 uid="uid://dlp3u73o1djsc"]
 
 [ext_resource type="Script" uid="uid://bwyf3lg8mgkom" path="res://packed_scenes/car/car.gd" id="2_ktsk0"]
+[ext_resource type="PackedScene" uid="uid://d0lil5xws0d1q" path="res://packed_scenes/car/crate_spawn/crate-spawn.tscn" id="3_2ptbx"]
 [ext_resource type="PackedScene" uid="uid://y10w32aa5wmg" path="res://packed_scenes/car/car-wheel.tscn" id="3_13jhh"]
 [ext_resource type="Texture2D" uid="uid://vnbf12s72rio" path="res://assets/kenney_car-kit/Models/FBX format/Textures/colormap.png" id="3_kod2t"]
 [ext_resource type="Texture2D" uid="uid://d4ostmqwgytk" path="res://templates/truck-town-demo/vehicles/particle_smoke.png" id="6_2ptbx"]
@@ -94,19 +95,23 @@ stream_3/stream = ExtResource("10_xlb5m")
 [node name="Car" type="Node3D" unique_id=774204282]
 
 [node name="VehicleBody3D" type="VehicleBody3D" parent="." unique_id=1949631971]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00169557, 0.222867, -0.0955184)
+transform = Transform3D(0.9999999, 0, 0, 0, 0.9999999, 0, 0, 0, 0.9999999, 0, 0, 0)
 physics_material_override = SubResource("PhysicsMaterial_ytlnw")
 center_of_mass_mode = 1
 script = ExtResource("2_ktsk0")
 debug = true
 
 [node name="collision-body" type="CollisionShape3D" parent="VehicleBody3D" unique_id=2059128913]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, -0.07286699, 0.070518404)
 shape = SubResource("ConvexPolygonShape3D_kl8mx")
 
 [node name="body" type="MeshInstance3D" parent="VehicleBody3D" unique_id=524504273]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.00169557, -0.07286699, 0.070518404)
 mesh = SubResource("ArrayMesh_ahx6c")
+
+[node name="CrateSpawn" parent="VehicleBody3D/body" unique_id=897202624 instance=ExtResource("3_2ptbx")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, -0.57)
+bounce_back_volume_threshold = 0.5
+peak_height = null
+duration = null
 
 [node name="WheelFrontLeft" parent="VehicleBody3D" unique_id=1243162478 instance=ExtResource("3_13jhh")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.523, 0.077, 1.106)
