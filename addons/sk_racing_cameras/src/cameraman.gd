@@ -2,8 +2,6 @@
 @icon("res://addons/sk_racing_cameras/icons/camera_man.svg")
 class_name RacingCameraManager
 extends Node
-
-
 ## Do not instantiate. This is the singleton (autoload) that [RacingCamera]
 ## nodes register themselves with, and it's automatically loaded by the
 ## [color=white]Racing Cameras[/color] plugin.
@@ -43,8 +41,6 @@ extends Node
 ## When a new car is set, the camera manager will also automatically set it to any
 ## external cameras, such as the [RacingTrackCamera].
 
-
-
 const _shared := preload("shared.gd")
 
 var _cameras: Array[RacingCamera]
@@ -54,7 +50,7 @@ var _car: Node3D
 
 
 func _enter_tree() -> void:
-	const TextDisplay:PackedScene = preload("text_display.tscn")
+	const TextDisplay: PackedScene = preload("text_display.tscn")
 	_cam_info_display = TextDisplay.instantiate() as CanvasLayer
 	add_child(_cam_info_display)
 
@@ -83,7 +79,8 @@ func _init_default_car() -> void:
 
 
 func _init_default_cam() -> void:
-	if _curr_idx != -1: return
+	if _curr_idx != -1:
+		return
 
 	if _car == null:
 		_init_default_car()
@@ -102,32 +99,32 @@ func _init_default_cam() -> void:
 		elif cam is RacingTrackCamera:
 			track_cam_idx = i
 
-	_switch_camera(wrapi(track_cam_idx+1, 0, _cameras.size()))
+	_switch_camera(wrapi(track_cam_idx + 1, 0, _cameras.size()))
 
 
 # Switch to the next available camera.
-func _next_camera(emit:=true) -> void:
-	_switch_camera(wrapi(_curr_idx+1, 0, _cameras.size()), emit)
+func _next_camera(emit := true) -> void:
+	_switch_camera(wrapi(_curr_idx + 1, 0, _cameras.size()), emit)
 
 
 # Switch to the previous available camera.
-func _prev_camera(emit:=true) -> void:
-	_switch_camera(wrapi(_curr_idx-1, 0, _cameras.size()), emit)
+func _prev_camera(emit := true) -> void:
+	_switch_camera(wrapi(_curr_idx - 1, 0, _cameras.size()), emit)
 
 
 # Switch to the camera at index [param index]. This function will do nothing
 # if the new camera is the same as the current camera, unless the parameter
 # [param force_change] is true.
-func _switch_camera(index:int, emit:=true, force_change:=false) -> void:
-	if _cameras.size() == 0 or (_curr_idx == index and not force_change): return
+func _switch_camera(index: int, emit := true, force_change := false) -> void:
+	if _cameras.size() == 0 or (_curr_idx == index and not force_change):
+		return
 	var old_idx := _curr_idx
 
-
-	var i := 0  # safety measure -- TODO: what happens if this fails, exactly?
+	var i := 0 # safety measure -- TODO: what happens if this fails, exactly?
 	while i <= _cameras.size() \
 	and _cameras[index]._car_base and (_cameras[index]._car_base != _car):
 		i += 1
-		index = wrapi(index+1, 0, _cameras.size())
+		index = wrapi(index + 1, 0, _cameras.size())
 
 	_curr_idx = index
 	if _curr_idx == old_idx:
@@ -144,7 +141,7 @@ func _switch_camera(index:int, emit:=true, force_change:=false) -> void:
 ## [br][br]
 ## [color=white]Note:[/color] Racing Cameras automatically remove themselves
 ## from the camera manager they exit the tree.
-func remove_camera(cam:RacingCamera) -> void:
+func remove_camera(cam: RacingCamera) -> void:
 	if cam in _cameras:
 		_cameras.erase(cam)
 		if cam.has_signal("position_changed"):
@@ -153,12 +150,11 @@ func remove_camera(cam:RacingCamera) -> void:
 			cam.mode_changed.disconnect(_cam_info_display.show_position_name)
 
 
-
 ## Add a camera to the camera manager
 ## [br][br]
 ## [color=white]Note:[/color] Racing Cameras automatically add themselves to
 ## the camera manager when they enter the tree.
-func add_camera(cam:RacingCamera) -> void:
+func add_camera(cam: RacingCamera) -> void:
 	if not cam in _cameras:
 		_cameras.append(cam)
 		cam.tree_exiting.connect(remove_camera.bind(cam))
@@ -168,15 +164,15 @@ func add_camera(cam:RacingCamera) -> void:
 			cam.mode_changed.connect(_cam_info_display.show_position_name)
 
 
-
 ## Set the car that is currently in use.
-func set_car(new_car:Node3D, force:=false) -> void:
-	if new_car == _car and not force: return
+func set_car(new_car: Node3D, force := false) -> void:
+	if new_car == _car and not force:
+		return
 
 	var old_car := _car
 	_car = new_car
 
-	for cam:RacingCamera in _cameras:
+	for cam: RacingCamera in _cameras:
 		if cam is RacingTrackCamera:
 			cam.set_car(new_car)
 
@@ -184,7 +180,7 @@ func set_car(new_car:Node3D, force:=false) -> void:
 		_init_default_cam()
 		return
 
-	var curr_cam:RacingCamera = _cameras[_curr_idx]
+	var curr_cam: RacingCamera = _cameras[_curr_idx]
 
 	if curr_cam is RacingTrackCamera:
 		return
@@ -192,7 +188,8 @@ func set_car(new_car:Node3D, force:=false) -> void:
 	# find a camera in new car that is the same as the old car's
 	for i in _cameras.size():
 		var cam := _cameras[i]
-		if cam._type != curr_cam._type: continue
+		if cam._type != curr_cam._type:
+			continue
 		if cam._car_base == new_car:
 			_switch_camera(i, false)
 			if curr_cam is RacingChaseCamera:

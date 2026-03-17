@@ -18,8 +18,7 @@ extends RacingCamera
 ## either by setting [member RacingCamera.follow_car] in the inspector, or using
 ## [method RacingCamera.set_car] through code.
 
-
-var _pivot:Node3D
+var _pivot: Node3D
 
 
 func _on_enter_tree() -> void:
@@ -56,7 +55,7 @@ func _on_unhandled_input(event: InputEvent) -> void:
 		return
 
 	if event is InputEventMouseMotion:
-		const DEG90 = PI/2
+		const DEG90 = PI / 2
 
 		_pivot.rotate_y(-event.relative.x * _shared.mouse_sensitivity)
 		_cam.rotate_x(-event.relative.y * _shared.mouse_sensitivity)
@@ -71,4 +70,3 @@ func _on_process(_delta: float) -> void:
 	if _car_base != _car_body:
 		global_position = _car_body.global_position
 		global_rotation = _car_body.global_rotation
-

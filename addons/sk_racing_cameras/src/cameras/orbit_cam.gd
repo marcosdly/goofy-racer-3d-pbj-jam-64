@@ -1,7 +1,6 @@
 @tool
 class_name RacingOrbitCamera
 extends RacingCamera
-
 ## An orbiting camera, controlled with the mouse. Only works while mouse
 ## is captured.
 ##[br][br]
@@ -23,19 +22,18 @@ extends RacingCamera
 ## either by setting [member RacingCamera.follow_car] in the inspector, or using
 ## [method RacingCamera.set_car] through code.
 
+var _pivot1: Node3D
+var _pivot2: Node3D
+var _cam_pos: Vector3
 
-var _pivot1:Node3D
-var _pivot2:Node3D
-var _cam_pos:Vector3
-
-@export var stabilized         : bool  = true   ## If [code]true[/code], the camera will not be affected by the rotation of the car.
-@export var default_distance   : float = 5      ## The default camera distance from the car.
-@export var cam_speed          : float = 0.4    ## How fast the camera moves toward or away from the car, when turning the mouse wheel.
-@export var min_distance       : float = 0.5    ## The minimum distance to the car.
-@export var max_distance       : float = 20     ## The maximum distance to the car.
-@export var invert_x_axis      : bool           ## Invert horizontal mouse movement.
-@export var invert_y_axis      : bool           ## Invert vertical mouse movement.
-@export var invert_mouse_wheel : bool           ## Invert mouse wheel movement.
+@export var stabilized: bool = true ## If [code]true[/code], the camera will not be affected by the rotation of the car.
+@export var default_distance: float = 5 ## The default camera distance from the car.
+@export var cam_speed: float = 0.4 ## How fast the camera moves toward or away from the car, when turning the mouse wheel.
+@export var min_distance: float = 0.5 ## The minimum distance to the car.
+@export var max_distance: float = 20 ## The maximum distance to the car.
+@export var invert_x_axis: bool ## Invert horizontal mouse movement.
+@export var invert_y_axis: bool ## Invert vertical mouse movement.
+@export var invert_mouse_wheel: bool ## Invert mouse wheel movement.
 
 
 func _on_enter_tree() -> void:
@@ -77,7 +75,7 @@ func _on_unhandled_input(event: InputEvent) -> void:
 		return
 
 	if event is InputEventMouseMotion:
-		const DEG90 = PI/2
+		const DEG90 = PI / 2
 
 		var x_dir := -1 if invert_x_axis else 1
 		var y_dir := -1 if invert_y_axis else 1
@@ -89,18 +87,24 @@ func _on_unhandled_input(event: InputEvent) -> void:
 		_check_mouse_wheel(event)
 
 
-func _check_mouse_wheel(event:InputEvent) -> void:
+func _check_mouse_wheel(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		var step := cam_speed
-		if Input.is_key_pressed(KEY_SHIFT): step *= 2
-		if Input.is_key_pressed(KEY_CTRL):  step /= 2
+		if Input.is_key_pressed(KEY_SHIFT):
+			step *= 2
+		if Input.is_key_pressed(KEY_CTRL):
+			step /= 2
 
 		if not invert_mouse_wheel:
-			if   event.button_index == MOUSE_BUTTON_WHEEL_UP:   _cam_pos.z -= step
-			elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN: _cam_pos.z += step
+			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+				_cam_pos.z -= step
+			elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+				_cam_pos.z += step
 		else:
-			if   event.button_index == MOUSE_BUTTON_WHEEL_UP:   _cam_pos.z += step
-			elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN: _cam_pos.z -= step
+			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+				_cam_pos.z += step
+			elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+				_cam_pos.z -= step
 
 		_cam_pos.z = clamp(_cam_pos.z, min_distance, max_distance)
 
@@ -108,4 +112,3 @@ func _check_mouse_wheel(event:InputEvent) -> void:
 func _on_set_active() -> void:
 	_cam.current = _active
 	set_process_unhandled_input(_active)
-
