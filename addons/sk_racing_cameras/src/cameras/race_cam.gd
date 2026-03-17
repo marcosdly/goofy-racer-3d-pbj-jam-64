@@ -50,7 +50,9 @@ var _cam: Camera3D
 var _car_base: Node3D
 var _car_body: PhysicsBody3D # The actual physics body that drives around, which may not be the '_car_base'
 
-
+var underlying_camera: Camera3D:
+	get:
+		return _cam
 
 ## The name of this camera, which will appear on screen when switching cameras.
 var camera_name: String #= "Unnamed Camera"
