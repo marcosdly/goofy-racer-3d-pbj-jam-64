@@ -1,8 +1,9 @@
 @tool
 @icon("res://addons/sk_racing_cameras/icons/racing_cam.svg")
 class_name RacingCamera
-extends Camera3D # must actually be a camera, so that they can be previewed in the editor
+extends Camera3D
 
+# must actually be a camera, so that they can be previewed in the editor
 
 ## Do not use. This is the base class for all racing cameras, and does nothing on its own.
 ##
@@ -35,27 +36,24 @@ extends Camera3D # must actually be a camera, so that they can be previewed in t
 ## The documentation of each camera should mention any further requirements
 ## they may have.
 
-
 const _shared := preload("res://addons/sk_racing_cameras/src/shared.gd")
 
 const _CONF_WARNING_FOLLOW_CAR_INVALID = "The provided car node is not a valid car. It must either be a PhysicsBody3D or define the method: \n    get_car_physicsbody() -> PhysicsBody3D"
 const _CONF_WARNING_CAR_NOT_FOUND = "Couldn't find a valid vehicle node in parent nodes.\nThe vehicle node must be either the scene root or the immediate parent of this node,\nand also either be a PhysicsBody3D subclass or define the method:\n    get_car_physicsbody() -> PhysicsBody3D"
 
-
 @warning_ignore("unused_private_class_variable")
-var _type:StringName = "RacingCamera"  # workaround for 'get_class' not accounting for custom classes
+var _type: StringName = "RacingCamera" # workaround for 'get_class' not accounting for custom classes
 var _active: bool = true
 
 @warning_ignore("unused_private_class_variable")
-var _cam:Camera3D
-
+var _cam: Camera3D
 var _car_base: Node3D
-var _car_body: PhysicsBody3D  # The actual physics body that drives around, which may not be the '_car_base'
+var _car_body: PhysicsBody3D # The actual physics body that drives around, which may not be the '_car_base'
 
 
 
 ## The name of this camera, which will appear on screen when switching cameras.
-var camera_name:String #= "Unnamed Camera"
+var camera_name: String #= "Unnamed Camera"
 
 ## The car that this camera should follow.
 ## [br][br]
@@ -64,16 +62,16 @@ var camera_name:String #= "Unnamed Camera"
 ## [br][br]
 ## [color=white]Note:[/color] This is to be used in the editor's inspector only. For setting the car through
 ## code use [member set_car].
-@export var follow_car:Node3D:
+@export var follow_car: Node3D:
 	set(v):
 		follow_car = v
 		if Engine.is_editor_hint():
 			update_configuration_warnings()
 
 
-
 func _enter_tree() -> void:
-	if Engine.is_editor_hint(): return
+	if Engine.is_editor_hint():
+		return
 	current = false
 
 	if $"/root".has_node(_shared.SINGLETON_NAME):
@@ -83,39 +81,58 @@ func _enter_tree() -> void:
 
 
 func _exit_tree() -> void:
-	if Engine.is_editor_hint(): return
+	if Engine.is_editor_hint():
+		return
 	if $"/root".has_node(_shared.SINGLETON_NAME):
 		$"/root".get_node(_shared.SINGLETON_NAME).remove_camera(self)
 
 
-
 func _ready() -> void:
-	if Engine.is_editor_hint(): return
+	if Engine.is_editor_hint():
+		return
 	set_process_unhandled_input(false)
 	_on_ready()
 	set_active(false)
 
 
-
 func _unhandled_input(event: InputEvent) -> void:
-	if _car_base == null: return
+	if _car_base == null:
+		return
 	_on_unhandled_input(event)
 
 
 func _process(delta: float) -> void:
-	if Engine.is_editor_hint(): return
-	if _car_base == null: return
+	if Engine.is_editor_hint():
+		return
+	if _car_base == null:
+		return
 	_on_process(delta)
 
 
 # this prevents mistakes, like forgetting to call 'super()' when overriding '_enter_tree'
 # and also to keep the documentation simpler
-func _on_enter_tree() -> void:                       assert(false, "to override")
-func _on_ready() -> void:                            assert(false, "to override")
-func _on_unhandled_input(_event: InputEvent) -> void: assert(false, "to override")
-func _on_process(_delta: float) -> void:              assert(false, "to override")
-func _on_set_active() -> void:                       assert(false, "to override")
-func _on_set_car() -> void:                          pass
+func _on_enter_tree() -> void:
+	assert(false, "to override")
+
+
+func _on_ready() -> void:
+	assert(false, "to override")
+
+
+func _on_unhandled_input(_event: InputEvent) -> void:
+	assert(false, "to override")
+
+
+func _on_process(_delta: float) -> void:
+	assert(false, "to override")
+
+
+func _on_set_active() -> void:
+	assert(false, "to override")
+
+
+func _on_set_car() -> void:
+	pass
 
 
 func _get_configuration_warnings() -> PackedStringArray:
@@ -127,17 +144,19 @@ func _get_configuration_warnings() -> PackedStringArray:
 
 
 func _find_valid_car_node() -> Node3D:
-	if owner and _is_node_valid_car(owner): return owner
-	var parent:Node = get_parent()
-	if not parent is RacingCamera and _is_node_valid_car(parent): return parent
+	if owner and _is_node_valid_car(owner):
+		return owner
+	var parent: Node = get_parent()
+	if not parent is RacingCamera and _is_node_valid_car(parent):
+		return parent
 	return null
 
 
-func _is_node_valid_car(node:Node) -> bool:
+func _is_node_valid_car(node: Node) -> bool:
 	return node is PhysicsBody3D or node.has_method("get_car_physicsbody")
 
 
-func _get_car_physicsbody(car:Node3D) -> PhysicsBody3D:
+func _get_car_physicsbody(car: Node3D) -> PhysicsBody3D:
 	if car is PhysicsBody3D:
 		return car
 	return car.get_car_physicsbody()
@@ -163,7 +182,7 @@ func _init_car_from_owner() -> void:
 
 
 ## Activate or deactivate this camera, according to [param enable].
-func set_active(enable:bool) -> void:
+func set_active(enable: bool) -> void:
 	_active = enable
 	_on_set_active()
 
@@ -173,9 +192,8 @@ func is_active() -> bool:
 	return _active
 
 
-
 ## Set the car that this camera should follow.
-func set_car(car:Node3D) -> void:
+func set_car(car: Node3D) -> void:
 	_car_base = car
 	_car_body = _get_car_physicsbody(_car_base)
 	_on_set_car()
