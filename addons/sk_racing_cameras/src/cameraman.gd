@@ -48,6 +48,21 @@ var _curr_idx: int = -1
 var _cam_info_display: CanvasLayer
 var _car: Node3D
 
+var MOUSE_MODE_LOCKED: Input.MouseMode:
+	set(mode):
+		_shared.MOUSE_MODE_LOCKED = mode
+	get:
+		return _shared.MOUSE_MODE_LOCKED
+
+var MOUSE_MODE_RELEASED: Input.MouseMode:
+	set(mode):
+		_shared.MOUSE_MODE_RELEASED = mode
+	get:
+		return _shared.MOUSE_MODE_RELEASED
+
+signal mouse_locked
+signal mouse_released
+
 
 func _enter_tree() -> void:
 	const TextDisplay: PackedScene = preload("text_display.tscn")
@@ -62,8 +77,42 @@ func _ready() -> void:
 		_init_default_cam()
 
 
+func set_mouse_locked(lock: bool) -> void:
+	if lock:
+		if Input.mouse_mode == self.MOUSE_MODE_LOCKED:
+			return
+		Input.set_mouse_mode(self.MOUSE_MODE_LOCKED)
+		if mouse_locked.has_connections():
+			mouse_locked.emit()
+	else:
+		if Input.mouse_mode == self.MOUSE_MODE_RELEASED:
+			return
+		Input.set_mouse_mode(self.MOUSE_MODE_RELEASED)
+		if mouse_released.has_connections():
+			mouse_released.emit()
+
+
+func _check_mouse_capture(event: InputEvent) -> void:
+	if event is InputEventMouseButton and event.button_index == 1:
+		set_mouse_locked(true)
+	elif event.is_action_pressed("ui_cancel"):
+		set_mouse_locked(false)
+
+
+func is_mouse_locked() -> bool:
+	return Input.mouse_mode == self.MOUSE_MODE_LOCKED
+
+
+func assert_mouse_mode() -> void:
+	if not (Input.mouse_mode == self.MOUSE_MODE_LOCKED or Input.mouse_mode == self.MOUSE_MODE_RELEASED):
+		assert(
+			false,
+			"BUG: mouse mode expected to be either %d (locked) or %d (released), got %d instead" % [MOUSE_MODE_LOCKED, MOUSE_MODE_RELEASED, Input.mouse_mode],
+		)
+
+
 func _unhandled_input(event: InputEvent) -> void:
-	_shared.check_mouse_capture(event)
+	_check_mouse_capture(event)
 
 	if _shared.next_camera_key_pressed(event):
 		_next_camera()

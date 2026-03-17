@@ -14,13 +14,8 @@ const ACTION_PREV_CAM_POS = "prev_camera_position"
 const DEFAULT_SWITCH_CAM_KEY = KEY_C
 const DEFAULT_SWITCH_CAM_POS_KEY = KEY_V
 
-
-static func check_mouse_capture(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index == 1:
-		Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
-
-	elif event.is_action_pressed("ui_cancel"):
-		Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+static var MOUSE_MODE_LOCKED: Input.MouseMode = Input.MouseMode.MOUSE_MODE_CAPTURED
+static var MOUSE_MODE_RELEASED: Input.MouseMode = Input.MouseMode.MOUSE_MODE_VISIBLE
 
 
 static func next_camera_key_pressed(event: InputEvent) -> bool:

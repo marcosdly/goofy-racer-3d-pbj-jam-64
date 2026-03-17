@@ -71,7 +71,7 @@ func _on_process(_delta: float) -> void:
 
 
 func _on_unhandled_input(event: InputEvent) -> void:
-	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+	if Input.mouse_mode != _shared.MOUSE_MODE_LOCKED:
 		return
 
 	if event is InputEventMouseMotion:

@@ -140,7 +140,7 @@ func _on_unhandled_input(event: InputEvent) -> void:
 	elif _shared.prev_cam_pos_key_pressed(event):
 		previous_mode()
 
-	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+	if Input.mouse_mode != _shared.MOUSE_MODE_LOCKED:
 		return
 
 	_check_mouse_wheel(event)

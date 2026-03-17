@@ -1,7 +1,6 @@
 @tool
 class_name RacingCockpitCamera
 extends RacingCamera
-
 ## A cockpit camera, that can controlled with the mouse.
 ##[br][br]
 ## Must be child of the car node, and be adjusted to the correct cockpit position.
@@ -51,7 +50,7 @@ func _on_set_active() -> void:
 
 
 func _on_unhandled_input(event: InputEvent) -> void:
-	if Input.mouse_mode != Input.MOUSE_MODE_CAPTURED:
+	if Input.mouse_mode != _shared.MOUSE_MODE_LOCKED:
 		return
 
 	if event is InputEventMouseMotion:
