@@ -1,2 +1,81 @@
-# Normalize EOL for all files that Git considers text files.
-* text=auto eol=lf
+# Handle line endings automatically for text files
+* text=auto
+
+# Godot Text-Based Files (VCS Friendly)
+# These should always be treated as text to allow for diffs and merges
+*.godot text
+*.tscn text
+*.tres text
+*.gd text
+*.gdshader text
+*.gdextension text
+*.import text
+*.cfg text
+*.uid text
+*.csproj text
+*.sln text
+*.json text
+*.md text
+*.txt text
+*.xml text
+*.editorconfig text
+*.props text
+*.targets text
+LICENSE text
+.editorconfig text
+
+# Godot Binary Files (LFS Recommended)
+# These are Godot-specific binary formats that cannot be diffed as text
+*.scn filter=lfs diff=lfs merge=lfs -text
+*.res filter=lfs diff=lfs merge=lfs -text
+*.sample filter=lfs diff=lfs merge=lfs -text
+*.oggvorbisstr filter=lfs diff=lfs merge=lfs -text
+*.ctex filter=lfs diff=lfs merge=lfs -text
+
+# General Media & 3D Assets (LFS Recommended)
+*.png filter=lfs diff=lfs merge=lfs -text
+*.webp filter=lfs diff=lfs merge=lfs -text
+*.svg filter=lfs diff=lfs merge=lfs -text
+*.hdr filter=lfs diff=lfs merge=lfs -text
+*.wav filter=lfs diff=lfs merge=lfs -text
+*.ogg filter=lfs diff=lfs merge=lfs -text
+*.glb filter=lfs diff=lfs merge=lfs -text
+*.fbx filter=lfs diff=lfs merge=lfs -text
+*.obj filter=lfs diff=lfs merge=lfs -text
+*.dae filter=lfs diff=lfs merge=lfs -text
+*.stl filter=lfs diff=lfs merge=lfs -text
+*.mtl filter=lfs diff=lfs merge=lfs -text
+*.ttf filter=lfs diff=lfs merge=lfs -text
+*.fontdata filter=lfs diff=lfs merge=lfs -text
+*.mesh filter=lfs diff=lfs merge=lfs -text
+*.phymat filter=lfs diff=lfs merge=lfs -text
+
+# Compiled Binaries & System Files (LFS Recommended)
+# Note: Many of these (like .dll, .so) are often added to .gitignore instead
+*.dll filter=lfs diff=lfs merge=lfs -text
+*.exe filter=lfs diff=lfs merge=lfs -text
+*.so filter=lfs diff=lfs merge=lfs -text
+*.dylib filter=lfs diff=lfs merge=lfs -text
+*.lib filter=lfs diff=lfs merge=lfs -text
+*.bin filter=lfs diff=lfs merge=lfs -text
+*.pck filter=lfs diff=lfs merge=lfs -text
+*.wasm filter=lfs diff=lfs merge=lfs -text
+*.node filter=lfs diff=lfs merge=lfs -text
+*.pdb filter=lfs diff=lfs merge=lfs -text
+*.exp filter=lfs diff=lfs merge=lfs -text
+
+# Source Code
+*.cs text diff=csharp
+*.py text diff=python
+*.hpp text diff=cpp
+*.js text
+
+# Temporary & Cache Files
+# Usually ignored via .gitignore, but defined here as binary if committed
+*.cache binary
+*.tmp binary
+*.rev binary
+*.idx binary
+*.pack binary
+*.up2date binary
+*.md5 binary
