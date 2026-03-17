@@ -147,5 +147,3 @@ Much like the `RacingMountedCamera`, the positions are specified using child nod
 ###### Note: using `RacingCameras` as position markers is highly discouraged, as it's completely untested and weird things may happen.
 
 The names of the positions can optionally be shown on the screen. Much like the mounted camera, the position names are the child node names, capitalized. E.g., `hairpin_camera` will display as `Hairpin Camera`.
-
-
