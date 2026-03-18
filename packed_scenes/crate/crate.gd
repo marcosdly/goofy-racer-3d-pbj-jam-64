@@ -5,6 +5,7 @@ extends Area3D
 @onready var box: MeshInstance3D = $RigidBody3D/CrateMesh
 @onready var collision: CollisionShape3D = $Collision
 @onready var test_area: Area3D = $PhysicsTestSubject
+@onready var test_collision: CollisionShape3D = $PhysicsTestSubject/PhysicsTestColiision
 @onready var physics_body: RigidBody3D = $RigidBody3D
 
 var _target_position_getter: Callable = Callable()

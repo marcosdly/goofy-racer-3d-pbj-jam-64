@@ -6,6 +6,7 @@ extends Area3D
 const crate_scene: PackedScene = preload("res://packed_scenes/crate/crate.tscn")
 
 @onready var collision: CollisionShape3D = $AreaShape
+@onready var timer: Timer = $Timer
 
 @export_group("State")
 @export var crates: Array[Crate] = []
@@ -29,6 +30,7 @@ const crate_scene: PackedScene = preload("res://packed_scenes/crate/crate.tscn")
 @export var draw_normal: bool = false
 @export var draw_random_spawn_points: bool = false
 @export var spawn_crates_on_interval: bool = false
+@export var draw_randomize_area: bool = false
 @export_tool_button("Spawn 1 Crate", "res://packed_scenes/crate/crate.svg") @warning_ignore("unused_private_class_variable") var _debug_spawn_crate: Callable = spawn_crate
 
 var size: Vector3:
@@ -273,6 +275,48 @@ func randomize_positions_no_overlap() -> void:
 		_crate_positions = new_positions
 
 
+func get_box_corners_global(coll_shape: CollisionShape3D) -> PackedVector3Array:
+	if not coll_shape:
+		return []
+
+	var _shape: BoxShape3D = coll_shape.shape
+	if not _shape is BoxShape3D:
+		push_error("Shape is not BoxShape3D")
+		return []
+
+	var box := _shape as BoxShape3D
+	var half_size := box.size * 0.5
+
+	# Local-space corners (centered at shape origin)
+	var local_corners: PackedVector3Array = [
+		Vector3(-half_size.x, -half_size.y, -half_size.z),
+		Vector3(half_size.x, -half_size.y, -half_size.z),
+		Vector3(half_size.x, half_size.y, -half_size.z),
+		Vector3(-half_size.x, half_size.y, -half_size.z),
+		Vector3(-half_size.x, -half_size.y, half_size.z),
+		Vector3(half_size.x, -half_size.y, half_size.z),
+		Vector3(half_size.x, half_size.y, half_size.z),
+		Vector3(-half_size.x, half_size.y, half_size.z),
+	]
+
+	# Apply full transform chain:
+	#   shape local -> CollisionShape3D local -> parent's global transform
+	var to_global_xform: Transform3D = coll_shape.global_transform
+	if draw_randomize_area:
+		DebugDraw3D.draw_box_xf(to_global_xform, Color.RED, true, timer.wait_time)
+
+	var global_corners: PackedVector3Array = []
+
+	for i in 8:
+		# Local corner -> CollisionShape3D local space
+		var local_to_coll: Vector3 = local_corners[i]
+
+		# CollisionShape3D local -> global
+		global_corners.append(to_global_xform * local_to_coll)
+
+	return global_corners
+
+
 var crate_state: Array[Dictionary] = []
 
 
@@ -284,8 +328,6 @@ func randomize_positions_no_overlap_via_areas() -> void:
 		return
 	else:
 		_reset_randomize_task()
-
-	#var new_positions: PackedVector3Array = []
 
 	# sort largest-first better packing success
 	crates.sort_custom(
@@ -307,6 +349,15 @@ func randomize_positions_no_overlap_via_areas() -> void:
 
 		var initial_count := crates.size()
 		var state := crate_state[i]
+
+		var vertices := get_box_corners_global(collision)
+		var _min := Vector3.INF
+		var _max := -Vector3.INF
+		for vtx in vertices:
+			if draw_randomize_area:
+				DebugDraw3D.draw_sphere(vtx, .1, Color.BLUE_VIOLET, timer.wait_time)
+			_min = _min.min(vtx)
+			_max = _max.max(vtx)
 
 		while not state.get_or_add(&"placed", false) and state.get_or_add(&"attempts", 0) < max_attempts_per_box:
 			state[&"attempts"] += 1

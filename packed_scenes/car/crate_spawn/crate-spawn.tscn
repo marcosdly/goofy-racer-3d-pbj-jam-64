@@ -12,6 +12,7 @@ point_count = 2
 script = ExtResource("1_w22yi")
 minimum_distance = 2.0
 height_curve = SubResource("Curve_qcd4x")
+draw_randomize_area = true
 
 [node name="AreaShape" type="CollisionShape3D" parent="." unique_id=2002445204]
 shape = ExtResource("2_qcd4x")
