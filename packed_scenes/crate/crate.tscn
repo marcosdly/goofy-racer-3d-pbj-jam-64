@@ -43,16 +43,27 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_kyurf")
 
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_n30w7"]
+points = PackedVector3Array(0.321736, 0.715, 0.321736, 0.321736, 0.679236, 0.3575, 0.3575, 0.679236, 0.321736, 0.321736, 0.715, -0.32180598, -0.32180598, 0.715, 0.321736, 0.321736, 0.035694007, 0.3575, -0.32180598, 0.679236, 0.3575, 0.3575, 0.679236, -0.32180598, 0.3575, 0.035694007, 0.321736, 0.321736, 0.679236, -0.3575, -0.32180598, 0.715, -0.32180598, -0.3575, 0.679236, 0.321736, 0.321736, 0, 0.321736, -0.32180598, 0.035694007, 0.3575, 0.3575, 0.035694007, -0.32180598, 0.321736, 0.035694007, -0.3575, -0.32180598, 0.679236, -0.3575, -0.3575, 0.679236, -0.32180598, -0.3575, 0.035694007, 0.321736, 0.321736, 0, -0.32180598, -0.32180598, 0, 0.321736, -0.32180598, 0.035694007, -0.3575, -0.3575, 0.035694007, -0.32180598, -0.32180598, 0, -0.32180598)
+
 [sub_resource type="BoxShape3D" id="BoxShape3D_n30w7"]
 size = Vector3(0.715, 0.715, 0.715)
 
 [node name="Crate" type="RigidBody3D" unique_id=1340357904]
+center_of_mass_mode = 1
+continuous_cd = true
 script = ExtResource("2_n30w7")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1745026995]
+[node name="CrateMesh" type="MeshInstance3D" parent="." unique_id=1745026995]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.357, 0)
 mesh = SubResource("ArrayMesh_tr1q7")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1977721707]
+[node name="Collision" type="CollisionShape3D" parent="." unique_id=1911279965]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.357, 0)
+shape = SubResource("ConvexPolygonShape3D_n30w7")
+
+[node name="Area3D" type="Area3D" parent="." unique_id=1494596094]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1977721707]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00049999356, 0)
 shape = SubResource("BoxShape3D_n30w7")

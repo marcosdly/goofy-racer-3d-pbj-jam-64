@@ -6,17 +6,22 @@ extends Area3D
 const crate_scene: PackedScene = preload("res://packed_scenes/crate/crate.tscn")
 
 @onready var collision: CollisionShape3D = $AreaShape
-@onready var shape_cast: ShapeCast3D = $ShapeCast3D
 
 @export_group("State")
 @export var crates: Array[Crate] = []
 @export var max_crates: int = 16
+
+@export_group("Crate sizing")
+@export_range(0, .5) var gap_per_direction: float = 0.05
+#@export var gap_is_between_only: bool = true
+@export var max_attempts_per_box: int = 200
 
 @export_group("Crate Bound Back")
 @export var minimum_distance: float = 5
 @export var height_curve: Curve
 @export var offset_height: float = 0
 @export var duration: float = 1
+@export var orbit_length: float = 5
 
 @export_group("Debug")
 @export var draw_aabb: bool = false
@@ -33,6 +38,8 @@ var size: Vector3:
 var shape: BoxShape3D:
 	get:
 		return collision.shape
+
+var _crate_positions: PackedVector3Array = []
 
 
 func _cleanup_debug_state_pre() -> void:
@@ -106,6 +113,7 @@ func get_next_spawn_point() -> Vector3:
 func get_origin() -> Vector3:
 	return collision.global_position
 
+#region Spawn logic
 
 func spawn_crate() -> void:
 	assert(crates.size() <= max_crates, "Amount of crates is higher than maximum")
@@ -114,11 +122,220 @@ func spawn_crate() -> void:
 	var crate_instance: Crate = crate_scene.instantiate()
 	crates.append(crate_instance)
 	add_child(crate_instance)
-	crate_instance.tree_exiting.connect(func() -> void: crates.erase(crate_instance))
 	crate_instance.scale = Vector3.ONE * randf_range(.4, .9)
 	crate_instance.top_level = true
 	crate_instance.global_position = get_next_spawn_point()
 
+	var cleanup := func() -> void:
+		crates.erase(crate_instance)
+
+	crate_instance.tree_exiting.connect(cleanup)
+
+	var reset_collision_physics := func(_start: Vector3, _target: Vector3) -> void:
+		crate_instance.sleeping = false
+
+	crate_instance.target_reached.connect(reset_collision_physics)
+
+
+func check_bounce_back() -> void:
+	for i in range(crates.size()):
+		var crate := crates[i]
+		if overlaps_body(crate):
+			continue
+		if global_position.distance_to(crate.global_position) < minimum_distance:
+			continue
+		if crate.is_bouncing_back:
+			continue
+		var callback := func() -> Vector3:
+			if _crate_positions.size() <= i:
+				return get_origin() # out of bounds
+			return get_origin() + _crate_positions[i]
+		crate.sleeping = true
+		crate.bounce_back(callback, height_curve, offset_height, duration)
+
+
+## Find proportional x in the relationship
+##  a -> c
+## ---  ---
+##  b -> x
+func _simple_rule_of_three(a: float, b: float, c: float) -> float:
+	return a / (c * b)
+
+
+func _key_sum_crate_volume(accum: float, crate: Crate):
+	return Util.volume_of(crate.size) + accum
+
+
+func check_crate_sizes() -> void:
+	if crates.size() == 0:
+		return
+	if size.length_squared() == 0:
+		return
+	var area_volume := Util.volume_of(size)
+	for crate in crates:
+		var crate_volume := Util.volume_of(crate.scale)
+		if crate_volume <= area_volume or crate_volume <= 0:
+			continue # already fits or zero
+		var factor := pow(area_volume / crate_volume, 1.0 / 3.0)
+		crate.scale *= factor
+
+
+func check_crate_sizes_with_gaps() -> void:
+	var count: int = crates.size()
+	if count == 0:
+		return
+	if size.length_squared() == 0:
+		return
+
+	var padding_outer := Vector3.ZERO
+
+	var gaps_between := Vector3.ZERO
+
+	# If we assume items are roughly spread in all 3 dimensions,
+	# we can conservatively reserve space for (n-1) gaps per axis.
+	if count > 1:
+		gaps_between = Vector3.ONE * gap_per_direction * (count - 1)
+
+	var effective_size := size - padding_outer - gaps_between
+
+	# Prevent negative / zero size
+	effective_size.x = maxf(effective_size.x, 0.001)
+	effective_size.y = maxf(effective_size.y, 0.001)
+	effective_size.z = maxf(effective_size.z, 0.001)
+
+	var effective_vol := effective_size.x * effective_size.y * effective_size.z
+
+	for crate in crates:
+		var crate_volume := Util.volume_of(crate.scale)
+		if crate_volume <= 0:
+			continue # already fits or zero
+		if crate_volume <= effective_vol:
+			# even the original is already smaller than effective volume
+			continue
+		var factor := (effective_vol / crate_volume) ** (1.0 / 3.0)
+		crate.scale *= factor
+		# Minimum size safeguard
+		crate.scale = crate.scale.max(Vector3(0.05, 0.05, 0.05))
+
+
+func randomize_positions_no_overlap() -> void:
+	if crates.is_empty() or size.length_squared() == 0:
+		return
+
+	var center := get_aabb().get_center()
+	var placed_aabbs: Array[AABB] = []
+	var new_positions: PackedVector3Array = []
+
+	for crate in crates:
+		var half_extents := (crate.scale * 0.5) + Vector3.ONE * gap_per_direction
+
+		var placed := false
+		var attempts := 0
+
+		while not placed and attempts < max_attempts_per_box:
+			attempts += 1
+
+			# Random position inside the big box (centered)
+			var pos := Vector3(
+				randf_range(-center.x, center.x),
+				randf_range(-center.y, center.y),
+				randf_range(-center.z, center.z),
+			)
+
+			var candidate := AABB(pos - half_extents, half_extents * 2.0)
+
+			# Check against all already placed
+			var overlaps := false
+			for existing in placed_aabbs:
+				if candidate.intersects(existing):
+					overlaps = true
+					break
+
+			if not overlaps:
+				new_positions.append(pos)
+				placed_aabbs.append(candidate)
+				placed = true
+
+		if not placed:
+			push_warning("Could not place %s after %d attempts — too dense?" % [crate.name, max_attempts_per_box])
+
+		_crate_positions = new_positions
+
+
+func randomize_positions_no_overlap_via_areas() -> void:
+	if crates.is_empty() or size.length_squared() == 0:
+		return
+
+	var new_positions: PackedVector3Array = []
+
+	# sort largest-first better packing success
+	crates.sort_custom(
+		func(a: Node3D, b: Node3D) -> bool:
+			var va := a.scale.length_squared()
+			var vb := b.scale.length_squared()
+			return va > vb
+	)
+
+	var half_big := size / 2
+	var center := collision.global_position
+	var success_count := 0
+
+	for i in range(crates.size()):
+		var crate := crates[i]
+		var placed := false
+		var attempts := 0
+
+		while not placed and attempts < max_attempts_per_box:
+			attempts += 1
+
+			# Random centered position
+			var pos := Vector3(
+				randf_range(-half_big.x, half_big.x),
+				randf_range(-half_big.y, half_big.y),
+				randf_range(-half_big.z, half_big.z),
+			)
+
+			# Temporarily move to test position
+			var original_pos := crate.global_position
+			crate.global_position = pos
+
+			# Optional tiny safety inflate: makes gap enforcement stricter
+			var original_scale: Vector3 = crate.area.scale
+			crate.area.scale += Vector3.ONE * (gap_per_direction / crate.scale.length()) # approximate
+
+			# Force physics to recognize current state (very important!)
+			# Without this, overlaps may not update instantly in some cases
+			await get_tree().physics_frame # or get_tree().process_frame if desperate
+
+			var overlapping = crate.area.get_overlapping_areas()
+
+			# Clean up test inflate
+			crate.area.scale = original_scale
+
+			var is_clear: bool = overlapping.is_empty()
+
+			# Revert
+			crate.global_position = original_pos
+
+			if is_clear:
+				# Keep the position
+				placed = true
+				success_count += 1
+				new_positions.append(pos)
+			else:
+				# Fallback
+				new_positions.append(center)
+
+		if not placed:
+			push_warning("Failed to place %s after %d attempts (too dense?)" % [crate.name, max_attempts_per_box])
+			# Optional fallback: hide, place at center, shrink more, etc.
+			# node.visible = false
+
+	print("Placed %d / %d boxes successfully" % [success_count, crates.size()])
+
+	_crate_positions = new_positions
+
+#endregion
 
 func _process(_delta: float) -> void:
 	if draw_aabb:
@@ -139,19 +356,15 @@ func _process(_delta: float) -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	if crates.size() < max_crates and Util.is_current_frame_in_fps_interval(30):
-		spawn_crate()
-	for crate in crates:
-		if overlaps_body(crate):
-			continue
-		if (crate.global_position - global_position).length() < minimum_distance:
-			continue
-		if crate.is_bouncing_back:
-			continue
-		crate.bounce_back(Callable(get_origin), height_curve, offset_height, duration)
+	check_bounce_back()
+	if gap_per_direction == 0:
+		check_crate_sizes()
+	else:
+		check_crate_sizes_with_gaps()
 
 
-func _input(event: InputEvent) -> void:
-	if event is InputEventMouseButton \
-	and (event as InputEventMouseButton).button_index == MouseButton.MOUSE_BUTTON_LEFT:
+func _on_timer_timeout() -> void:
+	if crates.size() < max_crates:
 		spawn_crate()
+	#randomize_positions_no_overlap()
+	randomize_positions_no_overlap_via_areas()
