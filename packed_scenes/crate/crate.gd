@@ -66,6 +66,10 @@ func get_aabb() -> AABB:
 	return AABB(global_transform.origin, size)
 
 
+func get_physics_origin() -> Vector3:
+	return physics_body.global_position
+
+
 func _physics_process(delta):
 	if not _is_bouncing_back:
 		return

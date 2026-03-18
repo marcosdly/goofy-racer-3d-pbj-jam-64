@@ -40,6 +40,7 @@ var shape: BoxShape3D:
 		return collision.shape
 
 var _crate_positions: PackedVector3Array = []
+var _randomize_task_id: int = -1
 
 
 func _cleanup_debug_state_pre() -> void:
@@ -122,6 +123,8 @@ func spawn_crate() -> void:
 	var crate_instance: Crate = crate_scene.instantiate()
 	crates.append(crate_instance)
 	add_child(crate_instance)
+	crate_state.append({ })
+	_crate_positions.append(Vector3.ZERO)
 	crate_instance.scale = Vector3.ONE * randf_range(.4, .9)
 	crate_instance.top_level = true
 	crate_instance.global_position = get_next_spawn_point()
@@ -165,6 +168,7 @@ func check_bounce_back() -> void:
 func _simple_rule_of_three(a: float, b: float, c: float) -> float:
 	return a / (c * b)
 
+#region Crate sizes
 
 func _key_sum_crate_volume(accum: float, crate: Crate):
 	return Util.volume_of(crate.size) + accum
@@ -221,6 +225,9 @@ func check_crate_sizes_with_gaps() -> void:
 		# Minimum size safeguard
 		crate.scale = crate.scale.max(Vector3(0.05, 0.05, 0.05))
 
+#endregion
+
+#region Position randomize
 
 func randomize_positions_no_overlap() -> void:
 	if crates.is_empty() or size.length_squared() == 0:
@@ -266,11 +273,19 @@ func randomize_positions_no_overlap() -> void:
 		_crate_positions = new_positions
 
 
+var crate_state: Array[Dictionary] = []
+
+
 func randomize_positions_no_overlap_via_areas() -> void:
 	if crates.is_empty() or size.length_squared() == 0:
 		return
 
-	var new_positions: PackedVector3Array = []
+	if _is_randomize_task_running():
+		return
+	else:
+		_reset_randomize_task()
+
+	#var new_positions: PackedVector3Array = []
 
 	# sort largest-first better packing success
 	crates.sort_custom(
@@ -282,18 +297,19 @@ func randomize_positions_no_overlap_via_areas() -> void:
 
 	var half_big := size / 2
 	var center := collision.global_position
-	var success_count := 0
 
-	for i in range(crates.size()):
+	var routine := func(i: int) -> void:
+		print("Started worker job %d for task %d for randomizing crate positions" % [i, _randomize_task_id])
+
 		# FIX: Create tmp copy to calculate and them get back
 		var crate := crates[i]
 		var test_area := crate.test_area
 
-		var placed := false
-		var attempts := 0
+		var initial_count := crates.size()
+		var state := crate_state[i]
 
-		while not placed and attempts < max_attempts_per_box:
-			attempts += 1
+		while not state.get_or_add(&"placed", false) and state.get_or_add(&"attempts", 0) < max_attempts_per_box:
+			state[&"attempts"] += 1
 
 			# Random centered position
 			var pos := Vector3(
@@ -303,7 +319,7 @@ func randomize_positions_no_overlap_via_areas() -> void:
 			)
 
 			# Temporarily move to test position
-			var original_pos: Vector3 = crate.global_position
+			var original_pos: Vector3 = await OneShotPromise.run(crate.get_physics_origin)
 			test_area.global_position = pos
 
 			# Optional tiny safety inflate: makes gap enforcement stricter
@@ -313,6 +329,9 @@ func randomize_positions_no_overlap_via_areas() -> void:
 			# Force physics to recognize current state (very important!)
 			# Without this, overlaps may not update instantly in some cases
 			await get_tree().physics_frame # or get_tree().process_frame if desperate
+			if crates.size() != initial_count:
+				return
+			assert(i < _crate_positions.size(), "BUG: Crate dynamic position array missing index %d" % i)
 
 			var overlapping = test_area.get_overlapping_areas()
 
@@ -326,21 +345,39 @@ func randomize_positions_no_overlap_via_areas() -> void:
 
 			if is_clear:
 				# Keep the position
-				placed = true
-				success_count += 1
-				new_positions.append(pos)
+				state[&"placed"] = true
+				#new_positions.append(pos)
+				_crate_positions[i] = pos
 			else:
 				# Fallback
-				new_positions.append(center)
+				#new_positions.append(center)
+				_crate_positions[i] = center
 
-		if not placed:
+		if not state[&"placed"]:
 			push_warning("Failed to place %s after %d attempts (too dense?)" % [crate.name, max_attempts_per_box])
 			# Optional fallback: hide, place at center, shrink more, etc.
 			# node.visible = false
 
-	print("Placed %d / %d boxes successfully" % [success_count, crates.size()])
+		var success_count: int = crate_state.reduce(
+			func(acc: int, __state: Dictionary) -> int: return int(__state.get(&"placed", false)) + acc,
+			0,
+		)
+		print("Placed %d / %d boxes successfully" % [success_count, crates.size()])
 
-	_crate_positions = new_positions
+	_randomize_task_id = WorkerThreadPool.add_group_task(routine, crates.size(), -1, true, "Compute random target position of crate physics body")
+	#_crate_positions = new_positions
+
+
+func _is_randomize_task_running() -> bool:
+	if _randomize_task_id == -1:
+		return false
+	return not WorkerThreadPool.is_group_task_completed(_randomize_task_id)
+
+
+func _reset_randomize_task() -> void:
+	_randomize_task_id = -1
+
+#endregion
 
 #endregion
 
@@ -373,5 +410,5 @@ func _physics_process(_delta: float) -> void:
 func _on_timer_timeout() -> void:
 	if crates.size() < max_crates:
 		spawn_crate()
-	#randomize_positions_no_overlap_via_areas()
+	randomize_positions_no_overlap_via_areas()
 	#randomize_positions_no_overlap()
