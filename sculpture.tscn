@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://bwj3c112u8oaj"]
+
+[ext_resource type="ArrayMesh" uid="uid://befliukfs8uob" path="res://Assets/kenney_car-kit/Models/OBJ format/van.obj" id="1_b4bwx"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_b4bwx"]
+albedo_color = Color(0.4955533, 0.6297475, 0.32049656, 1)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_7y8by"]
+
+[node name="Sculpture" type="Node3D" unique_id=1999119897]
+
+[node name="Platform" type="MeshInstance3D" parent="." unique_id=1370078861]
+transform = Transform3D(3.5, 0, 0, 0, 0.03, 0, 0, 0, 3, 0, 0, 0)
+material_overlay = SubResource("StandardMaterial3D_b4bwx")
+ignore_occlusion_culling = true
+mesh = SubResource("CylinderMesh_7y8by")
+
+[node name="Car" type="MeshInstance3D" parent="." unique_id=1374794192]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0)
+mesh = ExtResource("1_b4bwx")

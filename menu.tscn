@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://cprir62f8853d"]
+
+[ext_resource type="Script" uid="uid://j5gn723458t3" path="res://pivot camera.gd" id="2_mae5d"]
+[ext_resource type="PackedScene" uid="uid://bwj3c112u8oaj" path="res://sculpture.tscn" id="2_ouk20"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_ouk20"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_mae5d"]
+sky_material = SubResource("ProceduralSkyMaterial_ouk20")
+
+[sub_resource type="Environment" id="Environment_4hy44"]
+background_mode = 2
+sky = SubResource("Sky_mae5d")
+tonemap_mode = 2
+
+[sub_resource type="LabelSettings" id="LabelSettings_ouk20"]
+font_size = 109
+
+[sub_resource type="BoxMesh" id="BoxMesh_ouk20"]
+
+[node name="Menu" type="Node3D" unique_id=1485600346]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1027068040]
+environment = SubResource("Environment_4hy44")
+
+[node name="Sculpture" parent="." unique_id=1999119897 instance=ExtResource("2_ouk20")]
+
+[node name="Pivot Point" type="Node3D" parent="." unique_id=166500903]
+script = ExtResource("2_mae5d")
+
+[node name="Camera3D" type="Camera3D" parent="Pivot Point" unique_id=1177189704]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 3)
+
+[node name="Button" type="Button" parent="Pivot Point" unique_id=646241059]
+offset_left = 512.0
+offset_top = 512.0
+offset_right = 640.0
+offset_bottom = 576.0
+text = "Start"
+
+[node name="Label" type="Label" parent="Pivot Point" unique_id=1746743083]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 64.0
+offset_right = -64.0
+offset_bottom = -488.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Goofy Cargo Races"
+label_settings = SubResource("LabelSettings_ouk20")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Wall?" type="MeshInstance3D" parent="." unique_id=1812206534]
+transform = Transform3D(5, 0, 0, 0, 5, 0, 0, 0, 0.2, 0, 1.7, -5)
+mesh = SubResource("BoxMesh_ouk20")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="." unique_id=1970799837]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)
+light_energy = 10.981
+light_size = 1.0
