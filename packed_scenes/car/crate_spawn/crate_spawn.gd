@@ -126,15 +126,20 @@ func spawn_crate() -> void:
 	crate_instance.top_level = true
 	crate_instance.global_position = get_next_spawn_point()
 
-	var cleanup := func() -> void:
-		crates.erase(crate_instance)
+	crate_instance.tree_exiting.connect(
+		func() -> void:
+			crates.erase(crate_instance)
+	)
 
-	crate_instance.tree_exiting.connect(cleanup)
+	crate_instance.bounce_back_start.connect(
+		func() -> void:
+			crate_instance.physics_body.sleeping = true
+	)
 
-	var reset_collision_physics := func(_start: Vector3, _target: Vector3) -> void:
-		crate_instance.sleeping = false
-
-	crate_instance.target_reached.connect(reset_collision_physics)
+	crate_instance.bounce_back_end.connect(
+		func() -> void:
+			crate_instance.physics_body.sleeping = false
+	)
 
 
 func check_bounce_back() -> void:
@@ -150,7 +155,6 @@ func check_bounce_back() -> void:
 			if _crate_positions.size() <= i:
 				return get_origin() # out of bounds
 			return get_origin() + _crate_positions[i]
-		crate.sleeping = true
 		crate.bounce_back(callback, height_curve, offset_height, duration)
 
 
@@ -281,7 +285,10 @@ func randomize_positions_no_overlap_via_areas() -> void:
 	var success_count := 0
 
 	for i in range(crates.size()):
+		# FIX: Create tmp copy to calculate and them get back
 		var crate := crates[i]
+		var test_area := crate.test_area
+
 		var placed := false
 		var attempts := 0
 
@@ -296,26 +303,26 @@ func randomize_positions_no_overlap_via_areas() -> void:
 			)
 
 			# Temporarily move to test position
-			var original_pos := crate.global_position
-			crate.global_position = pos
+			var original_pos: Vector3 = crate.global_position
+			test_area.global_position = pos
 
 			# Optional tiny safety inflate: makes gap enforcement stricter
-			var original_scale: Vector3 = crate.area.scale
-			crate.area.scale += Vector3.ONE * (gap_per_direction / crate.scale.length()) # approximate
+			var original_scale: Vector3 = test_area.scale
+			test_area.scale += Vector3.ONE * (gap_per_direction / test_area.scale.length()) # approximate
 
 			# Force physics to recognize current state (very important!)
 			# Without this, overlaps may not update instantly in some cases
 			await get_tree().physics_frame # or get_tree().process_frame if desperate
 
-			var overlapping = crate.area.get_overlapping_areas()
+			var overlapping = test_area.get_overlapping_areas()
 
 			# Clean up test inflate
-			crate.area.scale = original_scale
+			test_area.scale = original_scale
 
 			var is_clear: bool = overlapping.is_empty()
 
 			# Revert
-			crate.global_position = original_pos
+			test_area.global_position = original_pos
 
 			if is_clear:
 				# Keep the position
@@ -366,5 +373,5 @@ func _physics_process(_delta: float) -> void:
 func _on_timer_timeout() -> void:
 	if crates.size() < max_crates:
 		spawn_crate()
+	#randomize_positions_no_overlap_via_areas()
 	#randomize_positions_no_overlap()
-	randomize_positions_no_overlap_via_areas()

@@ -3,6 +3,8 @@
 [ext_resource type="Texture2D" uid="uid://vnbf12s72rio" path="res://assets/kenney_car-kit/Models/FBX format/Textures/colormap.png" id="2_42l87"]
 [ext_resource type="Script" uid="uid://c1rmkwm4xa1n2" path="res://packed_scenes/crate/crate.gd" id="2_n30w7"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_n30w7"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_lxjxn"]
 resource_name = "colormap"
 vertex_color_use_as_albedo = true
@@ -43,27 +45,37 @@ _surfaces = [{
 blend_shape_mode = 0
 shadow_mesh = SubResource("ArrayMesh_kyurf")
 
-[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_n30w7"]
-points = PackedVector3Array(0.321736, 0.715, 0.321736, 0.321736, 0.679236, 0.3575, 0.3575, 0.679236, 0.321736, 0.321736, 0.715, -0.32180598, -0.32180598, 0.715, 0.321736, 0.321736, 0.035694007, 0.3575, -0.32180598, 0.679236, 0.3575, 0.3575, 0.679236, -0.32180598, 0.3575, 0.035694007, 0.321736, 0.321736, 0.679236, -0.3575, -0.32180598, 0.715, -0.32180598, -0.3575, 0.679236, 0.321736, 0.321736, 0, 0.321736, -0.32180598, 0.035694007, 0.3575, 0.3575, 0.035694007, -0.32180598, 0.321736, 0.035694007, -0.3575, -0.32180598, 0.679236, -0.3575, -0.3575, 0.679236, -0.32180598, -0.3575, 0.035694007, 0.321736, 0.321736, 0, -0.32180598, -0.32180598, 0, 0.321736, -0.32180598, 0.035694007, -0.3575, -0.3575, 0.035694007, -0.32180598, -0.32180598, 0, -0.32180598)
+[sub_resource type="SphereShape3D" id="SphereShape3D_n30w7"]
+radius = 0.25
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_42l87"]
+radius = 0.25
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_n30w7"]
 size = Vector3(0.715, 0.715, 0.715)
 
-[node name="Crate" type="RigidBody3D" unique_id=1340357904]
-center_of_mass_mode = 1
-continuous_cd = true
+[node name="Crate" type="Area3D" unique_id=2021828612 groups=["FriendlyCollisionBody"]]
+collision_layer = 2
+collision_mask = 2
 script = ExtResource("2_n30w7")
 
-[node name="CrateMesh" type="MeshInstance3D" parent="." unique_id=1745026995]
+[node name="RigidBody3D" type="RigidBody3D" parent="." unique_id=232271462]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.357, 0)
+physics_material_override = SubResource("PhysicsMaterial_n30w7")
+
+[node name="CrateMesh" type="MeshInstance3D" parent="RigidBody3D" unique_id=1745026995]
 mesh = SubResource("ArrayMesh_tr1q7")
 
+[node name="CrateMeshCollision" type="CollisionShape3D" parent="RigidBody3D" unique_id=1739000337]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.357, 0)
+shape = SubResource("SphereShape3D_n30w7")
+
 [node name="Collision" type="CollisionShape3D" parent="." unique_id=1911279965]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.357, 0)
-shape = SubResource("ConvexPolygonShape3D_n30w7")
+shape = SubResource("SphereShape3D_42l87")
 
-[node name="Area3D" type="Area3D" parent="." unique_id=1494596094]
+[node name="PhysicsTestSubject" type="Area3D" parent="." unique_id=1494596094]
+top_level = true
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D" unique_id=1977721707]
+[node name="PhysicsTestColiision" type="CollisionShape3D" parent="PhysicsTestSubject" unique_id=1977721707]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.00049999356, 0)
 shape = SubResource("BoxShape3D_n30w7")
