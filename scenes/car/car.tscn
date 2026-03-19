@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://doy0oruvng1rd"]
+
+[node name="Car" type="Node3D" unique_id=575518432]
+
+[node name="VehicleBody3D" type="VehicleBody3D" parent="." unique_id=656777681]
+
+[node name="WheelNW" type="VehicleWheel3D" parent="VehicleBody3D" unique_id=364315765]
+
+[node name="WheelNE" type="VehicleWheel3D" parent="VehicleBody3D" unique_id=732089714]
+
+[node name="WheelSW" type="VehicleWheel3D" parent="VehicleBody3D" unique_id=1915329379]
+
+[node name="WheelSE" type="VehicleWheel3D" parent="VehicleBody3D" unique_id=1775063396]

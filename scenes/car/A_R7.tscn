@@ -1,0 +1,58 @@
+[gd_scene format=3 uid="uid://c23fl883epofr"]
+
+[ext_resource type="PackedScene" uid="uid://lxj1xfskuom8" path="res://assets/cars/A_R7/Rims/Rims_2_L.fbx" id="2_1c57g"]
+[ext_resource type="PackedScene" uid="uid://c4e4k8mvi5t86" path="res://assets/cars/A_R7/Body/A_R7_Body_1.fbx" id="3_34pvn"]
+[ext_resource type="PackedScene" uid="uid://byc1ta8uw4veo" path="res://assets/cars/A_R7/Spoilers/A_R7_Spoiler_1fbx.fbx" id="7_x1lq5"]
+[ext_resource type="PackedScene" uid="uid://2x8rgwrpqeq0" path="res://assets/cars/A_R7/Spoilers/A_R7_Spoiler_2fbx.fbx" id="8_a1327"]
+
+[node name="A_R7" type="Node3D" unique_id=575518432]
+
+[node name="VehicleBody3D" type="VehicleBody3D" parent="." unique_id=478279398]
+
+[node name="WheelSW" type="VehicleWheel3D" parent="VehicleBody3D" unique_id=62923220]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55, 0.12, -1.14)
+use_as_traction = true
+wheel_radius = 0.25
+
+[node name="Rims_2_L" parent="VehicleBody3D/WheelSW" unique_id=779562242 instance_placeholder="res://assets/cars/A_R7/Rims/Rims_2_L.fbx"]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="WheelNE" type="VehicleWheel3D" parent="VehicleBody3D" unique_id=663059548]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.55, 0.12, 0.88)
+use_as_steering = true
+wheel_radius = 0.25
+
+[node name="Rims_1_R" parent="VehicleBody3D/WheelNE" unique_id=1586375355 instance_placeholder="res://assets/cars/A_R7/Rims/Rims_1_R.fbx"]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="WheelSE" type="VehicleWheel3D" parent="VehicleBody3D" unique_id=321636795]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.55, 0.12, -1.14)
+use_as_traction = true
+wheel_radius = 0.25
+
+[node name="Rims_1_R" parent="VehicleBody3D/WheelSE" unique_id=327156071 instance_placeholder="res://assets/cars/A_R7/Rims/Rims_1_R.fbx"]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="WheelNW" type="VehicleWheel3D" parent="VehicleBody3D" unique_id=283944016]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55, 0.12, 0.88)
+use_as_steering = true
+wheel_radius = 0.25
+
+[node name="Rims_2_L" parent="VehicleBody3D/WheelNW" unique_id=407222446 instance=ExtResource("2_1c57g")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="A_R7_Spoiler_1fbx" parent="VehicleBody3D" unique_id=361435199 instance=ExtResource("7_x1lq5")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.55, -1.4)
+
+[node name="A_R7_Spoiler_2fbx" parent="VehicleBody3D" unique_id=1954180561 instance=ExtResource("8_a1327")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.55, -1.4)
+visible = false
+
+[node name="A_R7_Body_1" parent="VehicleBody3D" unique_id=2083556193 instance=ExtResource("3_34pvn")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="A_R7_Body_2" parent="VehicleBody3D" unique_id=1818672819 instance_placeholder="res://assets/cars/A_R7/Body/A_R7_Body_2.fbx"]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, -0.19953561)
+
+[node name="A_R7_Body_3" parent="VehicleBody3D" unique_id=1786525108 instance_placeholder="res://assets/cars/A_R7/Body/A_R7_Body_3.fbx"]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, -0.22)

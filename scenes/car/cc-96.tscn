@@ -1,0 +1,121 @@
+[gd_scene format=3 uid="uid://casihifyh75c6"]
+
+[ext_resource type="PackedScene" uid="uid://ibqykwankcai" path="res://assets/cars/CC96/Body/CC96_Body_1.fbx" id="1_nm8k2"]
+[ext_resource type="PackedScene" uid="uid://c7pox8m51fwg0" path="res://assets/cars/CC96/Body/CC96_Body_2.fbx" id="2_onlmh"]
+[ext_resource type="PackedScene" uid="uid://cl8hnb3f786bx" path="res://assets/cars/CC96/Body/CC96_Body_3.fbx" id="3_f8rbq"]
+[ext_resource type="PackedScene" uid="uid://drsirrjvrrce0" path="res://assets/cars/CC96/Rims/Rims1_L.fbx" id="4_yq2am"]
+[ext_resource type="PackedScene" uid="uid://b5cqs8xncixj8" path="res://assets/cars/CC96/Rims/Rims1_R.fbx" id="5_mo3t5"]
+[ext_resource type="PackedScene" uid="uid://dyhydm4ocmbiu" path="res://assets/cars/CC96/Rims/Rims2_L.fbx" id="6_58ncv"]
+[ext_resource type="PackedScene" uid="uid://b0y6lrnmc6etp" path="res://assets/cars/CC96/Rims/Rims2_R.fbx" id="7_6cc8x"]
+[ext_resource type="PackedScene" uid="uid://cxcjiux2nxw4j" path="res://assets/cars/CC96/Rims/Rims3_L.fbx" id="8_4la8a"]
+[ext_resource type="PackedScene" uid="uid://bio18wh41e64k" path="res://assets/cars/CC96/Rims/Rims3_R.fbx" id="9_eafso"]
+[ext_resource type="PackedScene" uid="uid://c8lfdwccntmfe" path="res://assets/cars/CC96/Rims/Rims4_L.fbx" id="10_uitck"]
+[ext_resource type="PackedScene" uid="uid://cwftdq1y08gsa" path="res://assets/cars/CC96/Rims/Rims4_R.fbx" id="11_8sc6d"]
+[ext_resource type="PackedScene" uid="uid://dg374spen28c3" path="res://assets/cars/CC96/Spoiler/CC96_Spoiler.fbx" id="12_qdqxk"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_nm8k2"]
+points = PackedVector3Array(-0.015074603, -0.004078236, 0.00091904774, 0.013482406, 0.0074539687, 0.0003702715, 0.014579958, 0.0069023967, 0.0020166002, 0.017872617, -0.0068244827, -0.0018265538, 0.007987762, -0.004628356, 0.0053126984, -0.013426553, 0.0069023967, -0.0018265538, 0.0019529435, 0.00470627, 0.0053126984, -0.0057368055, -0.0068244827, -0.003474603, 0.018426552, 0.0058050593, -0.0029249664, 0.020074602, -0.005177025, 0.0020166002, -0.0013431546, -0.0073746033, 0.003115013, -0.0057368055, 0.0069023967, -0.003474603, -0.011778505, 0.0063551795, 0.0020166002, 0.019524105, 0.0058050593, 0.0020166002, -0.0139736105, -0.005725694, -0.0023761902, 0.010182867, -0.005725694, -0.003474603, 0.0019529435, -0.004628356, 0.0053126984, -0.0013431546, 0.0074539687, 0.003115013, 0.011287301, 0.00470627, 0.0047622016, -0.014524106, -0.005725694, 0.0014669639, 0.020074602, -0.0024307782, -0.0023761902, 0.013482406, -0.0073746033, 0.00091904774, -0.015074603, 0.0014099032, 0.0014669639, -0.014524106, 0.00470627, -0.0023761902, -0.00793191, -0.0073746033, -0.00017936493, 0.010182867, 0.0058050593, -0.003474603, 0.01897361, -0.005177025, -0.0029249664, -0.012876057, 0.0052549387, -0.0029249664, 0.01897361, -0.006275814, 0.0020166002, -0.0062838616, 0.0074539687, -0.0012777776, 0.020074602, 0.00415615, -0.0018265538, -0.013426553, 0.0014099032, 0.0020166002)
+
+[node name="CC96" type="Node3D" unique_id=1293259939]
+
+[node name="VehicleBody3D" type="VehicleBody3D" parent="." unique_id=1884570169]
+
+[node name="WheelSW" type="VehicleWheel3D" parent="VehicleBody3D" unique_id=225202984]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55, 0.12, -1.24)
+use_as_traction = true
+wheel_radius = 0.25
+
+[node name="Rims1_L" parent="VehicleBody3D/WheelSW" unique_id=487081087 instance=ExtResource("4_yq2am")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="Rims2_L" parent="VehicleBody3D/WheelSW" unique_id=1385497689 instance=ExtResource("6_58ncv")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+visible = false
+
+[node name="Rims3_L" parent="VehicleBody3D/WheelSW" unique_id=1274048540 instance=ExtResource("8_4la8a")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+visible = false
+
+[node name="Rims4_L" parent="VehicleBody3D/WheelSW" unique_id=1269925559 instance=ExtResource("10_uitck")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+visible = false
+
+[node name="WheelNE" type="VehicleWheel3D" parent="VehicleBody3D" unique_id=1375073353]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.55, 0.12, 0.815)
+use_as_steering = true
+wheel_radius = 0.25
+
+[node name="Rims1_R" parent="VehicleBody3D/WheelNE" unique_id=21173189 instance=ExtResource("5_mo3t5")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="Rims2_R" parent="VehicleBody3D/WheelNE" unique_id=32467674 instance=ExtResource("7_6cc8x")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+visible = false
+
+[node name="Rims3_R" parent="VehicleBody3D/WheelNE" unique_id=1200508464 instance=ExtResource("9_eafso")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+visible = false
+
+[node name="Rims4_R" parent="VehicleBody3D/WheelNE" unique_id=1977823871 instance=ExtResource("11_8sc6d")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+visible = false
+
+[node name="WheelSE" type="VehicleWheel3D" parent="VehicleBody3D" unique_id=87265721]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.55, 0.12, -1.24)
+use_as_traction = true
+wheel_radius = 0.25
+
+[node name="Rims1_R" parent="VehicleBody3D/WheelSE" unique_id=229061081 instance=ExtResource("5_mo3t5")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="Rims2_R" parent="VehicleBody3D/WheelSE" unique_id=247978265 instance=ExtResource("7_6cc8x")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+visible = false
+
+[node name="Rims3_R" parent="VehicleBody3D/WheelSE" unique_id=1670253969 instance=ExtResource("9_eafso")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+visible = false
+
+[node name="Rims4_R" parent="VehicleBody3D/WheelSE" unique_id=428375825 instance=ExtResource("11_8sc6d")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+visible = false
+
+[node name="WheelNW" type="VehicleWheel3D" parent="VehicleBody3D" unique_id=822262374]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.55, 0.12, 0.815)
+use_as_steering = true
+wheel_radius = 0.25
+
+[node name="Rims1_L" parent="VehicleBody3D/WheelNW" unique_id=689163161 instance=ExtResource("4_yq2am")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="Rims2_L" parent="VehicleBody3D/WheelNW" unique_id=1322829971 instance=ExtResource("6_58ncv")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+visible = false
+
+[node name="Rims3_L" parent="VehicleBody3D/WheelNW" unique_id=333354268 instance=ExtResource("8_4la8a")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+visible = false
+
+[node name="Rims4_L" parent="VehicleBody3D/WheelNW" unique_id=380038240 instance=ExtResource("10_uitck")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+visible = false
+
+[node name="CC96_Spoiler" parent="VehicleBody3D" unique_id=339010994 instance=ExtResource("12_qdqxk")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0.24016798, -1.8951113)
+
+[node name="CC96_Body_1" parent="VehicleBody3D" unique_id=633523854 instance=ExtResource("1_nm8k2")]
+transform = Transform3D(-4.3711367e-08, 0, -1, 0, 1, 0, 1, 0, -4.3711367e-08, 0, 0, -8.4703295e-22)
+
+[node name="CC96_Body_2" parent="VehicleBody3D" unique_id=1178606300 instance=ExtResource("2_onlmh")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, -0.14)
+visible = false
+
+[node name="CC96_Body_3" parent="VehicleBody3D" unique_id=766850183 instance=ExtResource("3_f8rbq")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, -0.13)
+visible = false
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="VehicleBody3D" unique_id=1425956702]
+transform = Transform3D(-3.45703e-05, -100, 1.1920929e-05, 0, 5.9604645e-06, 100, -100, 3.45703e-05, -2.3210908e-12, 0, 0.3218375, -8.4703295e-22)
+shape = SubResource("ConvexPolygonShape3D_nm8k2")
+
+[editable path="VehicleBody3D/WheelSW/Rims1_L"]
