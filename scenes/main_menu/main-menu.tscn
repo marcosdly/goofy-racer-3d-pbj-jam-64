@@ -1,0 +1,131 @@
+[gd_scene format=3 uid="uid://ymhk7oaneyy8"]
+
+[ext_resource type="Script" uid="uid://bm8woiwbtgj6l" path="res://scenes/main_menu/main_menu.gd" id="1_wmgoj"]
+[ext_resource type="PackedScene" uid="uid://dilcl7aco8lba" path="res://addons/proto-csgs/proto_csg_cylinder_3d.tscn" id="2_1ywsq"]
+[ext_resource type="Texture2D" uid="uid://bvxyg14yyrmc7" path="res://addons/proto-csgs/textures/purple/texture_01.png" id="3_1ywsq"]
+[ext_resource type="PackedScene" uid="uid://dxw7cledbpiia" path="res://addons/proto-csgs/proto_csg_box_3d.tscn" id="4_at3at"]
+[ext_resource type="Texture2D" uid="uid://cej3yoosomfd2" path="res://addons/proto-csgs/textures/dark/texture_13.png" id="5_0v2nn"]
+[ext_resource type="PackedScene" uid="uid://c23fl883epofr" path="res://scenes/car/A_R7.tscn" id="6_at3at"]
+[ext_resource type="PackedScene" uid="uid://casihifyh75c6" path="res://scenes/car/cc-96.tscn" id="7_0v2nn"]
+[ext_resource type="Script" uid="uid://bd046eokvcnu2" path="res://addons/phantom_camera/scripts/phantom_camera_host/phantom_camera_host.gd" id="8_itke8"]
+[ext_resource type="Script" uid="uid://b0fnekp2h0wcl" path="res://scenes/main_menu/phantom_camera_3d.gd" id="9_mthd8"]
+[ext_resource type="Script" uid="uid://8umksf8e80fw" path="res://addons/phantom_camera/scripts/resources/tween_resource.gd" id="10_ruldv"]
+[ext_resource type="Script" uid="uid://b8hhnqsugykly" path="res://addons/phantom_camera/scripts/resources/camera_3d_resource.gd" id="11_mthd8"]
+[ext_resource type="PackedScene" uid="uid://ccxvjbhvg736d" path="res://scenes/skybox/skybox.tscn" id="12_ruldv"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ruldv"]
+resource_local_to_scene = true
+albedo_texture = ExtResource("5_0v2nn")
+uv1_offset = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_eps3l"]
+resource_local_to_scene = true
+albedo_texture = ExtResource("3_1ywsq")
+uv1_offset = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_2low2"]
+resource_local_to_scene = true
+albedo_texture = ExtResource("3_1ywsq")
+uv1_offset = Vector3(0.5, 0.5, 0.5)
+uv1_triplanar = true
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_eps3l"]
+dof_blur_far_enabled = true
+dof_blur_far_distance = 12.0
+
+[sub_resource type="Resource" id="Resource_eps3l"]
+script = ExtResource("10_ruldv")
+
+[sub_resource type="Resource" id="Resource_ruldv"]
+script = ExtResource("11_mthd8")
+keep_aspect = 0
+fov = 50.0
+metadata/_custom_type_script = "uid://b8hhnqsugykly"
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_ruldv"]
+dof_blur_far_enabled = true
+dof_blur_far_distance = 12.0
+
+[node name="MainMenu" type="Node3D" unique_id=1954574580]
+script = ExtResource("1_wmgoj")
+
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="." unique_id=709931781]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+visible = false
+radius = 3.8076172
+height = 0.5
+sides = 32
+
+[node name="Node3D" type="Node3D" parent="." unique_id=1456672883]
+visible = false
+
+[node name="ProtoCSGBox3D" parent="." unique_id=462697570 instance=ExtResource("4_at3at")]
+size = Vector3(50, 1, 50)
+material = SubResource("StandardMaterial3D_ruldv")
+
+[node name="plat1" type="Node3D" parent="." unique_id=800832831]
+visible = false
+
+[node name="ProtoCSGCylinder3D" parent="plat1" unique_id=420134953 instance=ExtResource("2_1ywsq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+radius = 3.0
+height = 0.5
+material = SubResource("StandardMaterial3D_eps3l")
+block_color = 4
+
+[node name="A_R7" parent="plat1" unique_id=575518432 instance=ExtResource("6_at3at")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.14, 0)
+
+[node name="plat2" type="Node3D" parent="." unique_id=1691606209]
+transform = Transform3D(-0.83264405, 0, -0.5538085, 0, 1, 0, 0.5538085, 0, -0.83264405, 0, 0, 0)
+
+[node name="CC96" parent="plat2" unique_id=1293259939 instance=ExtResource("7_0v2nn")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.14, 0.33561456)
+
+[node name="ProtoCSGCylinder3D" parent="plat2" unique_id=99030925 instance=ExtResource("2_1ywsq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 0)
+radius = 2.6
+height = 0.5
+sides = 32
+material = SubResource("StandardMaterial3D_2low2")
+block_color = 4
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=342214046]
+transform = Transform3D(0.99957246, -0.005556144, 0.028706493, -2.3236498e-07, 0.981778, 0.1900313, -0.029239247, -0.18995006, 0.9813583, 0, 2.8956888, 6.7)
+top_level = true
+keep_aspect = 0
+attributes = SubResource("CameraAttributesPractical_eps3l")
+fov = 50.0
+
+[node name="PhantomCameraHost" type="Node" parent="Camera3D" unique_id=1407853172]
+process_priority = 300
+process_physics_priority = 300
+script = ExtResource("8_itke8")
+
+[node name="PhantomCamera3D" type="Node3D" parent="." unique_id=1442810327 node_paths=PackedStringArray("platform_node", "follow_target", "look_at_target")]
+transform = Transform3D(0.9993767, -0.0055552013, 0.02872366, -2.3231948e-07, 0.9816115, 0.19014496, -0.02923352, -0.18991785, 0.9819452, 0, 2.8956888, 6.7)
+top_level = true
+script = ExtResource("9_mthd8")
+mouse_follow_limit = 0.5
+platform_node = NodePath("../plat2")
+follow_mode = 2
+follow_target = NodePath("../CameraLookAt")
+look_at_mode = 2
+look_at_target = NodePath("../CameraLookAt")
+tween_resource = SubResource("Resource_eps3l")
+camera_3d_resource = SubResource("Resource_ruldv")
+attributes = SubResource("CameraAttributesPractical_ruldv")
+follow_offset = Vector3(0, 1.3956888, 6.7)
+look_at_offset = Vector3(-0.19895834, 0.1043112, 0)
+look_at_damping = true
+look_at_damping_value = 0.8
+align_transform_with_view = Callable()
+align_position_with_view = Callable()
+align_rotation_with_view = Callable()
+
+[node name="CameraLookAt" type="Marker3D" parent="." unique_id=980684847]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+
+[node name="Skybox" parent="." unique_id=508333510 instance=ExtResource("12_ruldv")]
